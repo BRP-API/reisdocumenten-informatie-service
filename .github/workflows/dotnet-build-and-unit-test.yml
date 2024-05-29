@@ -1,0 +1,26 @@
+name: .NET Build and Unit test solution
+on:
+  workflow_call:
+    inputs:
+      dotnet-solution:
+        required: true
+        type: string
+
+jobs:
+  build-and-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.dotnet-solution }}
+      - name: Build
+        run: dotnet build ${{ inputs.dotnet-solution }} --configuration Release --no-restore
+      - name: Run unit tests
+        run: dotnet test ${{ inputs.dotnet-solution }} --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./test-reports/coverage

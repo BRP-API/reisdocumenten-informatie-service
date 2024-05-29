@@ -3,39 +3,114 @@ name: continuous integration
 on:
   push:
     paths:
+      - src/**
       - features/**
       - .github/workflows/ci.yml
   workflow_dispatch:
 
 env:
+  DOTNET_SOLUTION: src/Reisdocument.sln
+  APP_CSPROJ_PATH: src/ReisdocumentProxy/ReisdocumentProxy.csproj
+  APP_CONTAINER_IMAGE: ghcr.io/brp-api/haal-centraal-reisdocument-bevragen-proxy
+  MOCK_CSPROJ_PATH: src/ReisdocumentService/ReisdocumentService.csproj
+  MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/haal-centraal-reisdocument-bevragen-mock
   NODE_VERSION: '20'
+  BUILD_RUN: ''
+  APP_VERSION: ''
+  MOCK_VERSION: ''
 
 jobs:
-  validate:
+  build-and-unit-test-dotnet-solution:
+    uses: ./.github/workflows/dotnet-build-and-unit-test.yml
+    with:
+      dotnet-solution: ${{ env.DOTNET_SOLUTION }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Set environment variables
+        run: |
+          export TZ="Europe/Amsterdam"
+          echo "BUILD_RUN=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
+
+          echo "APP_VERSION=$(sed -n 's/.*<Version>\([0-9.]*\).*/\1/p' ${{ env.APP_CSPROJ_PATH }})" >> $GITHUB_ENV
+          echo "MOCK_VERSION=$(sed -n 's/.*<Version>\([0-9.]*\).*/\1/p' ${{ env.MOCK_CSPROJ_PATH }})" >> $GITHUB_ENV
+      - id: app-changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            src:
+              - 'src/ReisdocumentProxy/**'
+      - id: mock-changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            src:
+              - 'src/ReisdocumentService/**'
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
         run: npm ci
-
-      - name: Run unit tests
+      - name: Set applicatie version
         run: |
-          ./scripts/unit-tests-verify.sh
-      - name: Validate Step Definitions
+          search_string="\(<Version>\([0-9.]*\)\)"
+          replace_string="<Version>${{ env.APP_VERSION }}+${{ env.BUILD_RUN }}"
+          sed -i "s/$search_string/$replace_string/" ${{ env.APP_CSPROJ_PATH }}
+      - name: Build container images
+        run: docker compose -f src/docker-compose.yml build
+      - name: Start containers
+        run: |
+          ./scripts/containers-start.sh
+      - name: Wait for DB restart
+        run: sleep 5s
+        shell: bash
+      - name: Validate functional specs
         run: |
           ./scripts/specs-verify.sh
+      - name: Stop containers
+        if: always()
+        run: |
+          ./scripts/containers-stop.sh
       - name: Genereer test rapportage
         if: always()
         run: |
-          node ./scripts/generate-cucumber-reports.js
+          node ./scripts/generate-cucumber-reports.js ${{ env.APP_VERSION }} ${{ env.BUILD_RUN }} ${{ github.ref_name }}
       - name: Upload test rapportage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Reports
           path: test-reports
+      - name: Push test rapportage naar brp-api.github.io repo
+        if: steps.app-changes.outputs.src == 'true'
+        uses: tech-thinker/push-to-repo@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GIT_PAT_TOKEN }}
+        with:
+          source-directory: test-reports/cucumber-js/reports
+          destination-repository-name: brp-api.github.io
+          destination-github-username: BRP-API
+          target-branch: test-reports/reisdocumenten
+          commit-message: "test rapporten van build: ${{ env.BUILD_RUN }}"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag & push app container images naar registry
+        if: steps.app-changes.outputs.src == 'true'
+        run: |
+          docker tag ${{ env.APP_CONTAINER_IMAGE }}:latest ${{ env.APP_CONTAINER_IMAGE }}:${{ env.APP_VERSION }}-${{ env.BUILD_RUN }}
+          docker push ${{ env.APP_CONTAINER_IMAGE }}:latest
+          docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ env.APP_VERSION }}-${{ env.BUILD_RUN }}
+      - name: Tag & push mock container images naar registry
+        if: steps.mock-changes.outputs.src == 'true'
+        run: |
+          docker tag ${{ env.MOCK_CONTAINER_IMAGE }}:latest ${{ env.MOCK_CONTAINER_IMAGE }}:${{ env.MOCK_VERSION }}-${{ env.BUILD_RUN }}
+          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:latest
+          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:${{ env.MOCK_VERSION }}-${{ env.BUILD_RUN }}
+  
