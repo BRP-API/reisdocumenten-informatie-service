@@ -7,6 +7,15 @@ on:
       - features/**
       - .github/workflows/ci.yml
   workflow_dispatch:
+    inputs:
+      publishType:
+        description: wat moet worden gepublish?
+        required: true
+        default: ''
+        type: choice
+        options:
+          - app
+          - mock
 
 env:
   DOTNET_SOLUTION: src/Reisdocument.sln
@@ -88,7 +97,7 @@ jobs:
           name: Reports
           path: test-reports
       - name: Push test rapportage naar brp-api.github.io repo
-        if: steps.changes.outputs.app == 'true'
+        if: steps.changes.outputs.app == 'true' || inputs.publishType == 'app'
         uses: tech-thinker/push-to-repo@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.GIT_PAT_TOKEN }}
@@ -105,13 +114,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Tag & push app container images naar registry
-        if: steps.changes.outputs.app == 'true'
+        if: steps.changes.outputs.app == 'true' || inputs.publishType == 'app'
         run: |
           docker tag ${{ env.APP_CONTAINER_IMAGE }}:latest ${{ env.APP_CONTAINER_IMAGE }}:${{ env.APP_VERSION }}-${{ env.BUILD_RUN }}
           docker push ${{ env.APP_CONTAINER_IMAGE }}:latest
           docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ env.APP_VERSION }}-${{ env.BUILD_RUN }}
       - name: Tag & push mock container images naar registry
-        if: steps.changes.outputs.mock == 'true'
+        if: steps.changes.outputs.mock == 'true' || inputs.publishType == 'mock'
         run: |
           docker tag ${{ env.MOCK_CONTAINER_IMAGE }}:latest ${{ env.MOCK_CONTAINER_IMAGE }}:${{ env.MOCK_VERSION }}-${{ env.BUILD_RUN }}
           docker push ${{ env.MOCK_CONTAINER_IMAGE }}:latest
