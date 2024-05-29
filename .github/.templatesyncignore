@@ -1,4 +1,3 @@
-
 :!features/docs/*.*
 :!features/step_definitions/*.*
 :!src/Brp.Shared.Infrastructure/*.*
