@@ -3,4 +3,6 @@
 :!features/step_definitions/*.*
 :!src/Brp.Shared.Infrastructure/*.*
 :!src/Serilog.Sinks.PersistentFile/*.*
+:!package-lock.json
+:!package.json
 *
