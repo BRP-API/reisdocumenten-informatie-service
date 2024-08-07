@@ -1,9 +1,7 @@
-version: '3.4'
-
 services:
   reisdocumentproxy:
     container_name: reisdocumentproxy
-    image: ghcr.io/brp-api/haal-centraal-reisdocument-bevragen-proxy:latest
+    image: ghcr.io/brp-api/reisdocumenten-informatie-service:latest
     build:
       context: .
       dockerfile: ReisdocumentProxy/Dockerfile
@@ -17,7 +15,7 @@ services:
 
   reisdocumentmock:
     container_name: reisdocumentmock
-    image: ghcr.io/brp-api/haal-centraal-reisdocument-bevragen-mock:latest
+    image: ghcr.io/brp-api/reisdocumenten-service-mock:latest
     build:
       context: .
       dockerfile: ReisdocumentService/Dockerfile
