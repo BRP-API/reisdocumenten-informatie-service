@@ -5,4 +5,8 @@
 :!src/Serilog.Sinks.PersistentFile/*.*
 :!package-lock.json
 :!package.json
+:!.docker/scripts/*.*
+:!.docker/db.yml
+:!.docker/db-ci.yml
+:!.docker/Dockerfile
 *
