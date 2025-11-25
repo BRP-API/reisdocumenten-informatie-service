@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReisdocumentService", "Reis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReisdocumentProxy", "ReisdocumentProxy\ReisdocumentProxy.csproj", "{31054D26-1970-4C80-8283-DF519D0F561D}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4EBE9F10-3135-4F31-A8D7-BA79751684D6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReisdocumentProxy.Tests", "ReisdocumentProxy.Tests\ReisdocumentProxy.Tests.csproj", "{4423588A-0797-4F7B-8674-1D9FB996CFFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brp.Shared.Infrastructure", "Brp.Shared.Infrastructure\Brp.Shared.Infrastructure.csproj", "{6EEC3F78-A168-40CA-BCE5-38491C9C2D3B}"
@@ -31,10 +29,6 @@ Global
 		{31054D26-1970-4C80-8283-DF519D0F561D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31054D26-1970-4C80-8283-DF519D0F561D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31054D26-1970-4C80-8283-DF519D0F561D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EBE9F10-3135-4F31-A8D7-BA79751684D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EBE9F10-3135-4F31-A8D7-BA79751684D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EBE9F10-3135-4F31-A8D7-BA79751684D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EBE9F10-3135-4F31-A8D7-BA79751684D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4423588A-0797-4F7B-8674-1D9FB996CFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4423588A-0797-4F7B-8674-1D9FB996CFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4423588A-0797-4F7B-8674-1D9FB996CFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -16,18 +16,23 @@ npx cucumber-js -f json:./test-reports/cucumber-js/step-definitions/test-result-
                 features/docs \
                 -p UnitTest \
                 > /dev/null
-if [ $? -ne 0 ]; then EXIT_CODE=1; fi
+if [[ $? -ne 0 ]]; then EXIT_CODE=1; fi
 
 npx cucumber-js -f json:./test-reports/cucumber-js/reisdocumenten/test-result.json \
                 -f summary:./test-reports/cucumber-js/reisdocumenten/test-result-reisdocumentnummer-summary.txt \
                 -f summary \
                 features/raadpleeg-met-reisdocumentnummer \
-                --tags "not @skip-verify" \
-                --world-parameters "$PARAMS"
+                -p InfoApi \
+                > /dev/null
+if [[ $? -ne 0 ]]; then EXIT_CODE=1; fi
 
 npx cucumber-js -f json:./test-reports/cucumber-js/reisdocumenten/test-result.json \
                 -f summary:./test-reports/cucumber-js/reisdocumenten/test-result-burgerservicenummer-summary.txt \
                 -f summary \
                 features/zoek-met-burgerservicenummer \
-                --tags "not @skip-verify" \
-                --world-parameters "$PARAMS"
+                -p InfoApi \
+                > /dev/null
+if [[ $? -ne 0 ]]; then EXIT_CODE=1; fi
+
+# Exit with error code if any command failed
+exit $EXIT_CODE
