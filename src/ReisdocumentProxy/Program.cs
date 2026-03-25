@@ -22,7 +22,7 @@ try
                          .AddJsonFile(Path.Combine("configuration", $"ocelot.{builder.Environment.EnvironmentName}.json"), true)
                          .AddEnvironmentVariables();
 
-    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
     builder.Services.AddOcelot();
 
     builder.Services.AddHealthChecks()
