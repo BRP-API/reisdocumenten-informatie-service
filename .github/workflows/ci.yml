@@ -128,6 +128,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           driver: docker-container
       - name: Build & push app container images naar registry
+        id: build-and-push-app-container
         if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app' || github.ref == 'refs/heads/main')
         uses: docker/build-push-action@v6
         with:
@@ -139,7 +140,15 @@ jobs:
             ${{ env.APP_CONTAINER_IMAGE }}:latest
             ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
             ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+
+      - name: Scan ${{ env.APP_CONTAINER_IMAGE }} container image for CVEs
+        if: steps.build-and-push-app-container.outcome == 'success'
+        uses: ./.github/actions/scan-container-image-for-cves
+        with:
+          image: ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          artifact-name: reisdocumenten-informatie-service-${{ steps.app-version.outputs.version }}-cve-scan-report
       - name: Build & push mock container images naar registry
+        id: build-and-push-mock-container
         if: always() && (steps.changed-project.outputs.mock == 'true' || inputs.publishType == 'mock' || github.ref == 'refs/heads/main')
         uses: docker/build-push-action@v6
         with:
@@ -151,3 +160,10 @@ jobs:
             ${{ env.MOCK_CONTAINER_IMAGE }}:latest
             ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
             ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+
+      - name: Scan ${{ env.MOCK_CONTAINER_IMAGE }} container image for CVEs
+        if: steps.build-and-push-mock-container.outcome == 'success'
+        uses: ./.github/actions/scan-container-image-for-cves
+        with:
+          image: ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          artifact-name: reisdocumenten-service-mock-${{ steps.mock-version.outputs.version }}-cve-scan-report
