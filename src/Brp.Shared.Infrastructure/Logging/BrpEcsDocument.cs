@@ -9,7 +9,7 @@ namespace Brp.Shared.Infrastructure.Logging;
 public class BrpEcsDocument : EcsDocument
 {
     [JsonPropertyName("brp"), DataMember(Name = "brp")]
-    public BrpApiData? Brp { get; set; }
+    public BrpApiData Brp { get; set; }
 
     public BrpEcsDocument()
     {
@@ -38,9 +38,6 @@ public class BrpEcsDocument : EcsDocument
 
     protected override void WriteAdditionalProperties(Action<string, object> write)
     {
-        if(Brp != null) 
-        {
-            write("brp", Brp);
-        }
+        write("brp", Brp);
     }
 }
