@@ -37,7 +37,7 @@ try
 
     app.SetupHealthCheckEndpoints(builder.Configuration, Log.Logger);
 
-    app.UseEndpoints(e => e.MapControllers());
+    app.MapControllers();
 
     app.UseMiddleware<OverwriteResponseBodyMiddleware>();
 
