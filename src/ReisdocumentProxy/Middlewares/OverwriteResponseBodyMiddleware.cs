@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Brp.Shared.Infrastructure.Http;
+﻿using Brp.Shared.Infrastructure.Http;
 using Brp.Shared.Infrastructure.ProblemDetails;
 using Brp.Shared.Infrastructure.Stream;
 using Brp.Shared.Infrastructure.Validatie;
@@ -14,19 +13,19 @@ namespace ReisdocumentProxy.Middlewares;
 public class OverwriteResponseBodyMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
     private readonly IDiagnosticContext _diagnosticContext;
 
-    public OverwriteResponseBodyMiddleware(RequestDelegate next, IMapper mapper, IDiagnosticContext diagnosticContext)
+    public OverwriteResponseBodyMiddleware(RequestDelegate next, IDiagnosticContext diagnosticContext)
     {
         _next = next;
-        _mapper = mapper;
-        _diagnosticContext = diagnosticContext;
+       _diagnosticContext = diagnosticContext;
     }
 
     public async Task Invoke(HttpContext context)
     {
         var orgBodyStream = context.Response.Body;
+        MemoryStream? newBodyStream = null;
 
         try
         {
@@ -52,7 +51,8 @@ public class OverwriteResponseBodyMiddleware
 
             ReisdocumentenQuery? reisdocumentenQuery = JsonConvert.DeserializeObject<ReisdocumentenQuery>(requestBody);
 
-            using var newBodyStream = new MemoryStream();
+           // using var newBodyStream = new MemoryStream();
+            newBodyStream = new MemoryStream();
             context.Response.Body = newBodyStream;
             await _next(context);
 
@@ -74,7 +74,7 @@ public class OverwriteResponseBodyMiddleware
             }
 
             var modifiedBody = context.Response.StatusCode == StatusCodes.Status200OK
-                ? body.Transform(_mapper, reisdocumentenQuery!.Fields!)
+                ? body.Transform(reisdocumentenQuery!.Fields!)
                 : body;
 
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
@@ -94,6 +94,23 @@ public class OverwriteResponseBodyMiddleware
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             await context.HandleInternalServerError();
+        }
+         finally
+        {
+            // GEGARANDEERD: De originele stream wordt ALTIJD hersteld, 
+            // ook bij fouten, exceptions of vroege 'return' statements.
+            context.Response.Body = orgBodyStream;
+
+            if (newBodyStream != null)
+            {
+                // Als er succesvol data is weggeschreven in de try, zet het dan over naar de echte client-stream
+                if (context.Response.StatusCode == StatusCodes.Status200OK && newBodyStream.Length > 0)
+                {
+                    newBodyStream.Position = 0;
+                    await newBodyStream.CopyToAsync(orgBodyStream);
+                }
+                newBodyStream.Dispose();
+            }
         }
     }
 

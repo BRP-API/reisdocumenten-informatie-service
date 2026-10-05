@@ -40,14 +40,16 @@ public static class PropertyPathFactory
             {
                 retval.Add(name.ToFullPath(path));
             }
-            if (property.PropertyType.FullNameStartsWith(baseNamespace))
+            if (property.PropertyType.FullNameStartsWith(baseNamespace)
+            || property.PropertyType.FullNameStartsWith("Brp.Shared.DtoMappers")) // added
             {
                 retval.AddRange(property.PropertyType.GetPropertyPaths(baseNamespace, name.ToFullPath(path)));
             }
             if (property.PropertyType.IsGenericType)
             {
                 var genericType = property.PropertyType.GetGenericArguments()[0];
-                if (genericType.FullNameStartsWith(baseNamespace))
+                if (genericType.FullNameStartsWith(baseNamespace) 
+                || property.PropertyType.FullNameStartsWith("Brp.Shared.DtoMappers")) //added
                 {
                     retval.AddRange(genericType.GetPropertyPaths(baseNamespace, name.ToFullPath(path)));
                 }

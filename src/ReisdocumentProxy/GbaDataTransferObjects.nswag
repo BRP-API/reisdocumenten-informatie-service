@@ -1,5 +1,5 @@
 {
-  "runtime": "Net60",
+  "runtime": "Net90",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
@@ -42,7 +42,10 @@
       "queryNullValue": "",
       "className": "{controller}Client",
       "operationGenerationMode": "MultipleClientsFromOperationId",
-      "additionalNamespaceUsages": [],
+      "additionalNamespaceUsages": [ 
+        "Brp.Shared.DtoMappers.CommonDtos",
+        "Brp.Shared.DtoMappers.BrpDtos"
+        ],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": false,
       "generateJsonMethods": false,

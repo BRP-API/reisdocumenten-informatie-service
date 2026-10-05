@@ -22,5 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReisdocumentProxy\ReisdocumentProxy.csproj" />
+     <ProjectReference Include="..\Brp.Shared.DtoMappers\Brp.Shared.DtoMappers.csproj" />
   </ItemGroup>
 </Project>

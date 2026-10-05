@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using HaalCentraal.ReisdocumentProxy.Generated;
+﻿using HaalCentraal.ReisdocumentProxy.Generated;
 using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
 using Newtonsoft.Json;
 using Brp.Shared.Infrastructure.Json;
+using ReisdocumentProxy.Mappers;
 
 namespace ReisdocumentProxy.Helpers;
 
@@ -19,7 +19,7 @@ public static class TransformHelper
         return proxyTokens.Exists(t => payload.Contains(t));
     }
 
-    public static string Transform(this string payload, IMapper mapper, List<string> fields)
+    public static string Transform(this string payload, List<string> fields)
     {
         if (payload.IsProxyResponse())
         {
@@ -32,15 +32,15 @@ public static class TransformHelper
 
         ReisdocumentenQueryResponse retval = response switch
         {
-            Gba.RaadpleegMetReisdocumentnummerResponse r => mapper.Map<RaadpleegMetReisdocumentnummerResponse>(r).Filter(fieldsToReturn),
-            Gba.ZoekMetBurgerservicenummerResponse r => mapper.Map<ZoekMetBurgerservicenummerResponse>(r).Filter(fieldsToReturn),
+            Gba.RaadpleegMetReisdocumentnummerResponse r => r.Map().Filter(fieldsToReturn),
+            Gba.ZoekMetBurgerservicenummerResponse r => r.Map().Filter(fieldsToReturn),
             _ => throw new NotSupportedException(),
         };
 
         return retval.ToJsonCompact();
     }
 
-    private static RaadpleegMetReisdocumentnummerResponse Filter(this RaadpleegMetReisdocumentnummerResponse src, IEnumerable<string> fields)
+    private static RaadpleegMetReisdocumentnummerResponse Filter(this RaadpleegMetReisdocumentnummerResponse? src, IEnumerable<string> fields)
     {
         return new RaadpleegMetReisdocumentnummerResponse
         {
@@ -48,7 +48,7 @@ public static class TransformHelper
         };
     }
 
-    private static ZoekMetBurgerservicenummerResponse Filter(this ZoekMetBurgerservicenummerResponse src, IEnumerable<string> fields)
+    private static ZoekMetBurgerservicenummerResponse Filter(this ZoekMetBurgerservicenummerResponse? src, IEnumerable<string> fields)
     {
         return new ZoekMetBurgerservicenummerResponse
         {
