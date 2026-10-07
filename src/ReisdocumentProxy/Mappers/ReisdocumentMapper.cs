@@ -9,13 +9,14 @@ public static class ReisdocumentMapper
     
     public static Reisdocument? Map(this Gba.GbaReisdocument? source)
     {
-        return source == null
-            ? null
-            : new Reisdocument
+        if (source == null) return null;
+         var reisdocumentnummer = source.Reisdocumentnummer == "........." 
+            ? null 
+            : source.Reisdocumentnummer; 
+
+        return  new Reisdocument
             {
-                Reisdocumentnummer = source.Reisdocumentnummer == "........." 
-                ? null 
-                : source.Reisdocumentnummer,
+                Reisdocumentnummer = reisdocumentnummer,
                 Soort = source.Soort.Map(),
                 DatumEindeGeldigheid = source.DatumEindeGeldigheid.Map(),
                 InhoudingOfVermissing = source.InhoudingOfVermissing.Map(source.InOnderzoek),
