@@ -1,4 +1,4 @@
-﻿using HaalCentraal.ReisdocumentProxy.Generated;
+﻿using Brp.Shared.DtoMappers.BrpApiDtos;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -8,8 +8,13 @@ public static class GbaDatumMapper
 {
     private static readonly Regex GbaDatumRegex = new("^(?<jaar>[0-9]{4})(?<maand>[0-9]{2})(?<dag>[0-9]{2})$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
-    public static AbstractDatum Map(this string datum)
+    public static AbstractDatum? Map(this string? datum)
     {
+        if (string.IsNullOrEmpty(datum))
+        {
+           return null;
+        }
+
         if (!GbaDatumRegex.IsMatch(datum))
         {
             return new DatumOnbekend
@@ -70,7 +75,7 @@ public static class GbaDatumMapper
         return datum switch
         {
             VolledigeDatum d => $"{d.Datum!.Value.Day} {maand[d.Datum!.Value.Month]} {d.Datum!.Value.Year}",
-            JaarMaandDatum d => $"{maand[d.Maand]} {d.Jaar}",
+            JaarMaandDatum d => $"{maand[d.Maand.GetValueOrDefault()]} {d.Jaar}",
             JaarDatum d => $"{d.Jaar}",
             DatumOnbekend => "onbekend",
             _ => null
