@@ -52,7 +52,7 @@ namespace HaalCentraal.ReisdocumentProxy.Generated
     {
 
         [Newtonsoft.Json.JsonProperty("reisdocumenten", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<Reisdocument> Reisdocumenten { get; set; }
+        public System.Collections.Generic.ICollection<Reisdocument> Reisdocumenten { get; set; }
 
     }
 
@@ -61,7 +61,7 @@ namespace HaalCentraal.ReisdocumentProxy.Generated
     {
 
         [Newtonsoft.Json.JsonProperty("reisdocumenten", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<Reisdocument> Reisdocumenten { get; set; }
+        public System.Collections.Generic.ICollection<Reisdocument> Reisdocumenten { get; set; }
 
     }
 
@@ -70,7 +70,7 @@ namespace HaalCentraal.ReisdocumentProxy.Generated
     {
 
         [Newtonsoft.Json.JsonProperty("reisdocumentnummer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<string> Reisdocumentnummer { get; set; }
+        public System.Collections.Generic.ICollection<string> Reisdocumentnummer { get; set; }
 
     }
 
@@ -91,7 +91,7 @@ namespace HaalCentraal.ReisdocumentProxy.Generated
         /// Foutmelding per fout in een parameter. Alle gevonden fouten worden één keer teruggemeld.
         /// </summary>
         [Newtonsoft.Json.JsonProperty("invalidParams", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<InvalidParams> InvalidParams { get; set; }
+        public System.Collections.Generic.ICollection<InvalidParams> InvalidParams { get; set; }
 
     }
 
@@ -347,19 +347,6 @@ namespace HaalCentraal.ReisdocumentProxy.Generated
             get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
-
-    }
-
-    /// <summary>
-    /// * **datum**: de datum waarop de bijhouding van de persoonsgegevens is gestaakt.
-    /// <br/>
-    /// </summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class OpschortingBijhouding : OpschortingBijhoudingBasis
-    {
-
-        [Newtonsoft.Json.JsonProperty("datum", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AbstractDatum Datum { get; set; }
 
     }
 

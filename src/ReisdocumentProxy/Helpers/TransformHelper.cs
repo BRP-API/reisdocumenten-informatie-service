@@ -42,6 +42,11 @@ public static class TransformHelper
 
     private static RaadpleegMetReisdocumentnummerResponse Filter(this RaadpleegMetReisdocumentnummerResponse? src, IEnumerable<string> fields)
     {
+        if (src == null) 
+        {
+            return new RaadpleegMetReisdocumentnummerResponse();
+        }
+
         return new RaadpleegMetReisdocumentnummerResponse
         {
             Reisdocumenten = src.Reisdocumenten.FilterList(fields)?.ToList()
@@ -50,6 +55,10 @@ public static class TransformHelper
 
     private static ZoekMetBurgerservicenummerResponse Filter(this ZoekMetBurgerservicenummerResponse? src, IEnumerable<string> fields)
     {
+          if (src == null) 
+        {
+            return new ZoekMetBurgerservicenummerResponse();
+        }
         return new ZoekMetBurgerservicenummerResponse
         {
             Reisdocumenten = src.Reisdocumenten.FilterList(fields)?.ToList()

@@ -2,9 +2,9 @@
 
 public static class WaardetabelMapper
 {
-    public static Brp.Shared.DtoMappers.CommonDtos.Waardetabel? Map(this CommonDtos.Waardetabel? waardetabel)
+    public static CommonDtos.Waardetabel? Map(this CommonDtos.Waardetabel? waardetabel)
     {
-        return waardetabel == null
+        return waardetabel == null || waardetabel.Code == ".."
             ? null
             : new CommonDtos.Waardetabel
             {

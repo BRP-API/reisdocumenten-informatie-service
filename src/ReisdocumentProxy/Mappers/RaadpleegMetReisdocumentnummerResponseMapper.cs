@@ -5,7 +5,8 @@ namespace ReisdocumentProxy.Mappers;
 
 public static class RaadpleegMetReisdocumentnummerResponseMapper
 {
-public static HC.RaadpleegMetReisdocumentnummerResponse? Map(this Gba.RaadpleegMetReisdocumentnummerResponse? source)
+    
+    public static HC.RaadpleegMetReisdocumentnummerResponse? Map(this Gba.RaadpleegMetReisdocumentnummerResponse? source)
     {
         return source == null
             ? null
