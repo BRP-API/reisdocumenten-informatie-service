@@ -10,6 +10,7 @@ public static class ReisdocumentMapper
     public static Reisdocument? Map(this Gba.GbaReisdocument? source)
     {
         if (source == null) return null;
+        
          var reisdocumentnummer = source.Reisdocumentnummer == "........." 
             ? null 
             : source.Reisdocumentnummer; 

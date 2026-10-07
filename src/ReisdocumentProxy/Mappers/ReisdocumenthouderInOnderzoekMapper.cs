@@ -15,7 +15,7 @@ public static class ReisdocumenthouderInOnderzoekMapper
             "010120" => new ReisdocumenthouderInOnderzoek
             {
                 Burgerservicenummer = true,
-                DatumIngangOnderzoek = source?.DatumIngangOnderzoek?.Map()
+                DatumIngangOnderzoek = source.DatumIngangOnderzoek?.Map()
             },
             _ => null
         };

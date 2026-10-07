@@ -9,14 +9,15 @@ public static class ReisdocumenthouderMapper
     
     public static Reisdocumenthouder? Map(this Gba.GbaReisdocumenthouder? source)
     {
-        return source == null
-            ? null
-            : new Reisdocumenthouder
+        if (source == null) return null;
+
+        bool? geheimhoudingPersoonsgegevens = (source.GeheimhoudingPersoonsgegevens.GetValueOrDefault() != 0) 
+            ? true 
+            : null;
+        return new Reisdocumenthouder
             {
                 Burgerservicenummer = source.Burgerservicenummer,
-                GeheimhoudingPersoonsgegevens = (source.GeheimhoudingPersoonsgegevens.GetValueOrDefault() != 0) 
-                ? true 
-                : null,
+                GeheimhoudingPersoonsgegevens = geheimhoudingPersoonsgegevens,
                 InOnderzoek = source.InOnderzoek.Map(),
                 OpschortingBijhouding = source.OpschortingBijhouding.Map(),
                 AdditionalProperties = source.AdditionalProperties
