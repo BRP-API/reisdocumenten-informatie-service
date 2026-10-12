@@ -1,5 +1,6 @@
 using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
 using HaalCentraal.ReisdocumentProxy.Generated;
+using Brp.Shared.DtoMappers.CommonDtos;
 using Brp.Shared.DtoMappers.Mappers;
 
 namespace ReisdocumentProxy.Mappers;
@@ -15,12 +16,19 @@ public static class ReisdocumentMapper
         return  new Reisdocument
             {
                 Reisdocumentnummer = reisdocumentnummer,
-                Soort = source.Soort.Map(),
+                Soort = MapWaardetabel(source.Soort),
                 DatumEindeGeldigheid = source.DatumEindeGeldigheid.Map(),
                 InhoudingOfVermissing = source.InhoudingOfVermissing.Map(source.InOnderzoek),
                 Houder = source.Houder.Map(), 
                 InOnderzoek = InOnderzoekConverter.Convert(source.InOnderzoek)
             };
+    }
+
+    private static Waardetabel? MapWaardetabel(Waardetabel? waardetabel)
+    {
+        return waardetabel?.Code == ".."
+            ? null
+            : waardetabel.Map();
     }
 }
 
