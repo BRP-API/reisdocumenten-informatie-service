@@ -1,16 +1,16 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     TZ=Europe/Amsterdam \
     # Disable config change monitoring for better container performance
     # See https://github.com/Contrast-Security-OSS/agent-operator/blob/master/docs/public/08-tips.md
     DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
 # Install ICU libraries
-RUN apk add --no-cache icu-libs
+RUN apk add --no-cache icu-libs && apk update && apk upgrade
 WORKDIR /app
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
 WORKDIR /src
