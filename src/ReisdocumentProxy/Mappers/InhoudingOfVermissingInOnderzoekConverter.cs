@@ -1,5 +1,6 @@
 using HaalCentraal.ReisdocumentProxy.Generated;
 using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
+using Brp.Shared.DtoMappers.Mappers;
 
 namespace ReisdocumentProxy.Mappers;
 

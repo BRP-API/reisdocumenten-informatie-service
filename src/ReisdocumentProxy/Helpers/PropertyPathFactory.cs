@@ -6,7 +6,7 @@ namespace ReisdocumentProxy.Helpers;
 
 public static class PropertyPathFactory
 {
-    public static List<string> GetPropertyPaths(this Type type, string baseNamespace, string path = "")
+    public static List<string> GetPropertyPaths(this Type type, string[] baseNamespaces, string path = "")
     {
         List<string> retval = new();
 
@@ -22,14 +22,17 @@ public static class PropertyPathFactory
                         retval.Add(prop.ToFullPath(path));
                     }
                     break;
-                case JsonInheritanceAttribute a:
-                    retval.AddRange(a.Type.GetPropertyPaths(baseNamespace, path));
+               case JsonInheritanceAttribute a:
+                    retval.AddRange(a.Type.GetPropertyPaths(baseNamespaces, path));
+                    break;
+                case Brp.Shared.DtoMappers.BrpApiDtos.JsonInheritanceAttribute a:
+                    retval.AddRange(a.Type.GetPropertyPaths(baseNamespaces, path));
                     break;
                 default:
                     break;
             }
         }
-        foreach (var property in type.GetProperties())
+        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
             var name = property.JsonName();
             if (string.IsNullOrWhiteSpace(name))
@@ -40,23 +43,21 @@ public static class PropertyPathFactory
             {
                 retval.Add(name.ToFullPath(path));
             }
-            if (property.PropertyType.FullNameStartsWith(baseNamespace)
-            || property.PropertyType.FullNameStartsWith("Brp.Shared.DtoMappers")) // added
+            if (property.PropertyType.FullNameStartsWith(baseNamespaces))
             {
-                retval.AddRange(property.PropertyType.GetPropertyPaths(baseNamespace, name.ToFullPath(path)));
+                retval.AddRange(property.PropertyType.GetPropertyPaths(baseNamespaces, name.ToFullPath(path)));
             }
             if (property.PropertyType.IsGenericType)
             {
                 var genericType = property.PropertyType.GetGenericArguments()[0];
-                if (genericType.FullNameStartsWith(baseNamespace) 
-                || property.PropertyType.FullNameStartsWith("Brp.Shared.DtoMappers")) //added
+                if (genericType.FullNameStartsWith(baseNamespaces)) 
                 {
-                    retval.AddRange(genericType.GetPropertyPaths(baseNamespace, name.ToFullPath(path)));
+                    retval.AddRange(genericType.GetPropertyPaths(baseNamespaces, name.ToFullPath(path)));
                 }
             }
         }
 
-        return retval;
+        return [.. retval.Distinct()];
     }
 
     private static string? JsonName(this PropertyInfo? property)
@@ -70,11 +71,11 @@ public static class PropertyPathFactory
             : property.Name;
     }
 
-    private static bool FullNameStartsWith(this Type? type, string baseNamespace)
+    private static bool FullNameStartsWith(this Type? type, string[] baseNamespaces)
     {
         return type != null &&
                !string.IsNullOrWhiteSpace(type.FullName) &&
-               type.FullName.StartsWith(baseNamespace);
+              baseNamespaces.Any(type.FullName.StartsWith);
     }
 
     private static string ToFullPath(this string name, string path)

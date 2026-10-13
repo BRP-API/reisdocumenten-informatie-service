@@ -1,5 +1,6 @@
 using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
 using HaalCentraal.ReisdocumentProxy.Generated;
+using Brp.Shared.DtoMappers.BrpApiDtos;
 using Brp.Shared.DtoMappers.CommonDtos;
 using Brp.Shared.DtoMappers.Mappers;
 
@@ -17,7 +18,7 @@ public static class ReisdocumentMapper
             {
                 Reisdocumentnummer = reisdocumentnummer,
                 Soort = MapWaardetabel(source.Soort),
-                DatumEindeGeldigheid = source.DatumEindeGeldigheid.Map(),
+                DatumEindeGeldigheid = MapDatum(source.DatumEindeGeldigheid),
                 InhoudingOfVermissing = source.InhoudingOfVermissing.Map(source.InOnderzoek),
                 Houder = source.Houder.Map(), 
                 InOnderzoek = InOnderzoekConverter.Convert(source.InOnderzoek)
@@ -30,5 +31,8 @@ public static class ReisdocumentMapper
             ? null
             : waardetabel.Map();
     }
+
+    private static AbstractDatum? MapDatum(string? datum)
+    => datum == null ? null : datum.Map();
 }
 

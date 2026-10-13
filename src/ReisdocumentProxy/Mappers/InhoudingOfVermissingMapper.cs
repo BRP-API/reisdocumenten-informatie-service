@@ -13,7 +13,7 @@ public static class InhoudingOfVermissingMapper
             ? null
             : new HC.InhoudingOfVermissing
             {
-                Datum = source.Datum.Map(),
+                Datum = source.Datum?.Map(),
                 Aanduiding = source.Aanduiding.Map(),
                 InOnderzoek = inOnderzoek.ConvertToInhoudingOfVermissingInOnderzoek()
             };
