@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Brp.Shared.Infrastructure.Http;
+﻿using Brp.Shared.Infrastructure.Http;
 using Brp.Shared.Infrastructure.ProblemDetails;
 using Brp.Shared.Infrastructure.Stream;
 using Brp.Shared.Infrastructure.Validatie;
@@ -14,14 +13,12 @@ namespace ReisdocumentProxy.Middlewares;
 public class OverwriteResponseBodyMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IMapper _mapper;
     private readonly IDiagnosticContext _diagnosticContext;
 
-    public OverwriteResponseBodyMiddleware(RequestDelegate next, IMapper mapper, IDiagnosticContext diagnosticContext)
+    public OverwriteResponseBodyMiddleware(RequestDelegate next, IDiagnosticContext diagnosticContext)
     {
         _next = next;
-        _mapper = mapper;
-        _diagnosticContext = diagnosticContext;
+       _diagnosticContext = diagnosticContext;
     }
 
     public async Task Invoke(HttpContext context)
@@ -64,7 +61,7 @@ public class OverwriteResponseBodyMiddleware
             {
                 return;
             }
-
+          
             var body = await context.Response.ReadBodyAsync();
 
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
@@ -74,7 +71,7 @@ public class OverwriteResponseBodyMiddleware
             }
 
             var modifiedBody = context.Response.StatusCode == StatusCodes.Status200OK
-                ? body.Transform(_mapper, reisdocumentenQuery!.Fields!)
+                ? body.Transform(reisdocumentenQuery!.Fields!)
                 : body;
 
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))

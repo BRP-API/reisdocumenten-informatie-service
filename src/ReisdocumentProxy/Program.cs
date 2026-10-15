@@ -23,7 +23,6 @@ try
                          .AddJsonFile(Path.Combine("configuration", $"ocelot.{builder.Environment.EnvironmentName}.json"), true)
                          .AddEnvironmentVariables();
 
-    builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
     builder.Services.AddOcelot();
 
     builder.Services.AddHealthChecks()
@@ -37,7 +36,7 @@ try
 
     app.SetupHealthCheckEndpoints(builder.Configuration, Log.Logger);
 
-    app.UseEndpoints(e => e.MapControllers());
+    app.MapControllers();
 
     app.UseMiddleware<OverwriteResponseBodyMiddleware>();
 

@@ -8,7 +8,8 @@ public class PropertyPathFactoryTests
 
     public PropertyPathFactoryTests()
     {
-        actual = typeof(HaalCentraal.ReisdocumentProxy.Generated.Reisdocument).GetPropertyPaths("HaalCentraal");
+        actual = typeof(HaalCentraal.ReisdocumentProxy.Generated.Reisdocument)
+        .GetPropertyPaths(["HaalCentraal", "Brp.Shared.DtoMappers.BrpApiDtos","Brp.Shared.DtoMappers.CommonDtos"]);
     }
 
     [InlineData("reisdocumentnummer")]

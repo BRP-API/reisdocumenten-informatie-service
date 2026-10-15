@@ -1,13 +1,13 @@
-﻿using AutoMapper;
 using HaalCentraal.ReisdocumentProxy.Generated;
-using HaalCentraal.ReisdocumentProxy.Generated.Gba;
-using ReisdocumentProxy.Mappers;
+using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
+using Brp.Shared.DtoMappers.Mappers;
 
-namespace ReisdocumentProxy.Profiles;
+namespace ReisdocumentProxy.Mappers;
 
-public class InhoudingOfVermissingInOnderzoekConverter : ITypeConverter<GbaInOnderzoek, InhoudingOfVermissingInOnderzoek?>
+public static class InhoudingOfVermissingInOnderzoekConverter
 {
-    public InhoudingOfVermissingInOnderzoek? Convert(GbaInOnderzoek source, InhoudingOfVermissingInOnderzoek? destination, ResolutionContext context)
+    
+    public static InhoudingOfVermissingInOnderzoek? ConvertToInhoudingOfVermissingInOnderzoek(this Gba.GbaInOnderzoek source)
     {
         return source?.AanduidingGegevensInOnderzoek switch
         {

@@ -9,10 +9,10 @@
     <Version>2.0.4</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="15.1.3" />
     <PackageReference Include="Ocelot" Version="24.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Brp.Shared.DtoMappers\Brp.Shared.DtoMappers.csproj" />
     <ProjectReference Include="..\Brp.Shared.Infrastructure\Brp.Shared.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

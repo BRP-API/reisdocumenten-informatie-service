@@ -1,6 +1,8 @@
 ﻿using Brp.Shared.Infrastructure.Json;
 using HaalCentraal.ReisdocumentProxy.Generated;
 using ReisdocumentProxy.Helpers;
+using Brp.Shared.DtoMappers.CommonDtos;
+using Brp.Shared.DtoMappers.BrpApiDtos;
 
 namespace ReisdocumentProxy.Tests;
 

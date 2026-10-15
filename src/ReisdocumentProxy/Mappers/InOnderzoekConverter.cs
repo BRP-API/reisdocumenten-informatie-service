@@ -1,13 +1,13 @@
-﻿using AutoMapper;
 using HaalCentraal.ReisdocumentProxy.Generated;
-using HaalCentraal.ReisdocumentProxy.Generated.Gba;
-using ReisdocumentProxy.Mappers;
+using Gba = HaalCentraal.ReisdocumentProxy.Generated.Gba;
+using Brp.Shared.DtoMappers.Mappers;
 
-namespace ReisdocumentProxy.Profiles;
+namespace ReisdocumentProxy.Mappers;
 
-public class ReisdocumentInOnderzoekConverter : ITypeConverter<GbaInOnderzoek, ReisdocumentInOnderzoek?>
+public static class InOnderzoekConverter
 {
-    public ReisdocumentInOnderzoek? Convert(GbaInOnderzoek source, ReisdocumentInOnderzoek? destination, ResolutionContext context)
+
+     public static ReisdocumentInOnderzoek? Convert(this Gba.GbaInOnderzoek source)
     {
         return source?.AanduidingGegevensInOnderzoek switch
         {
@@ -17,24 +17,25 @@ public class ReisdocumentInOnderzoekConverter : ITypeConverter<GbaInOnderzoek, R
                 DatumEindeGeldigheid = true,
                 Reisdocumentnummer = true,
                 Soort = true,
-                DatumIngangOnderzoek = source?.DatumIngangOnderzoek?.Map()
+                DatumIngangOnderzoek = source.DatumIngangOnderzoek?.Map()
             },
             "123510" => new ReisdocumentInOnderzoek
             {
                 Soort = true,
-                DatumIngangOnderzoek = source?.DatumIngangOnderzoek?.Map()
+                DatumIngangOnderzoek = source.DatumIngangOnderzoek?.Map()
             },
             "123520" => new ReisdocumentInOnderzoek
             {
                 Reisdocumentnummer= true,
-                DatumIngangOnderzoek = source?.DatumIngangOnderzoek?.Map()
+                DatumIngangOnderzoek = source.DatumIngangOnderzoek?.Map()
             },
             "123550" => new ReisdocumentInOnderzoek
             {
                 DatumEindeGeldigheid = true,
-                DatumIngangOnderzoek = source?.DatumIngangOnderzoek?.Map()
+                DatumIngangOnderzoek = source.DatumIngangOnderzoek?.Map()
             },
             _ => null
         };
     }
 }
+
