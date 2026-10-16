@@ -4,7 +4,7 @@ public static class WaardetabelMapper
 {
     public static Brp.Shared.DtoMappers.CommonDtos.Waardetabel? Map(this CommonDtos.Waardetabel? waardetabel)
     {
-        return waardetabel == null 
+        return waardetabel == null
             ? null
             : new CommonDtos.Waardetabel
             {
